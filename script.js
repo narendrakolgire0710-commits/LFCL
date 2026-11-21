@@ -583,7 +583,7 @@ $$('.btn:not(.quiz-next)').forEach(btn => btn.addEventListener('click', e => {
 /* ---------- auction countdown: 25 Nov 2026, 6:30 PM IST (same moment for every visitor) ---------- */
 (function auctionCountdown() {
   const box = $('#auctionCount'); if (!box) return;
-  const target = new Date('2026-11-25T18:30:00+05:30');
+  const target = new Date('2026-11-29T18:30:00+05:30');
   const els = {}; box.querySelectorAll('b[data-u]').forEach(b => els[b.dataset.u] = b);
   const pad = n => String(n).padStart(2, '0');
   let timer = 0;
