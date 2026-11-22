@@ -163,3 +163,7 @@ This is a static HTML/CSS/JavaScript website. Upload the complete `LFCL_Presenta
 - Teams: one owner system for 1 or 2 owners — equal circular photos, face-centred high-res crops (`owner-*-sq.webp`), "&" link and OWNER / CO-OWNER labels, aligned on every device.
 - Playoffs: redesigned navy + gold bracket (Top-4 seeds strip, Stage 1 / Stage 2 / Final / Champion, drawn connectors, responsive vertical flow on phones).
 - Removed the endless owner-photo float animation and unused files. Images and other animations are unchanged in quality.
+
+## v5 additions
+- Guests: added Sangmesh Bembalge (Administrator, MIT World Peace School, Latur); Adv Naresh Kulkarni is now Vice President, Dayanand Law Alumni Association.
+- Background music: assets/lfcl-anthem.mp3 (original file, not re-encoded) loops from the moment the site opens. Top-bar button switches music on/off. If a browser blocks autoplay, the loader shows a one-tap ENTER WITH MUSIC button.

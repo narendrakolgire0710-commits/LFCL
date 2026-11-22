@@ -110,3 +110,43 @@
 @media(max-width:480px){.po-seedlist{gap:8px}.po-seedchip{padding:7px 8px}.po-head h4{font-size:1rem}}
 @media(prefers-reduced-motion:reduce){.po-card,.po-final,.po-final:after,.po-champ-in,.po-rays,.po-trophy,.po-p.draw{animation:none!important}.po-p.draw{stroke-dasharray:none;stroke-dashoffset:0}}
 @media(max-width:480px){.po-rays{width:190px;height:190px;margin:-95px 0 0 -95px}}
+
+/* ===================== v8: music toggle, loader gate, 6th guest ===================== */
+.nav-links{margin-left:auto}
+.music-toggle{order:3;flex:none;position:relative;display:inline-flex;align-items:center;justify-content:center;gap:9px;height:40px;margin-left:20px;padding:0 14px;border:1px solid #f7c75e99;border-radius:999px;background:linear-gradient(145deg,#12204a,#080c1a);color:var(--gold);font:900 .6rem var(--font);letter-spacing:.14em;cursor:pointer;-webkit-tap-highlight-color:transparent;transition:border-color .25s,background .25s,color .25s,transform .25s}
+.music-toggle:hover{border-color:var(--gold);transform:translateY(-1px)}
+.music-toggle:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+.mt-label{white-space:nowrap}
+.mt-eq{display:inline-flex;align-items:flex-end;gap:2.5px;height:15px}
+.mt-eq i{display:block;width:3px;height:100%;border-radius:2px;background:linear-gradient(0deg,#d9a63a,#ffe9a8);transform-origin:50% 100%;transform:scaleY(.25)}
+.music-toggle.is-on .mt-eq i{animation:mtBar .9s ease-in-out infinite alternate;will-change:transform}
+.music-toggle.is-on .mt-eq i:nth-child(2){animation-duration:.65s;animation-delay:-.3s}
+.music-toggle.is-on .mt-eq i:nth-child(3){animation-duration:1.05s;animation-delay:-.6s}
+.music-toggle.is-on .mt-eq i:nth-child(4){animation-duration:.78s;animation-delay:-.2s}
+@keyframes mtBar{from{transform:scaleY(.2)}to{transform:scaleY(1)}}
+.mt-off{display:none;width:18px;height:18px;flex:none}
+.music-toggle:not(.is-on) .mt-eq{display:none}
+.music-toggle:not(.is-on) .mt-off{display:block}
+.music-toggle:not(.is-on){color:#c6cee0;border-color:#ffffff44}
+.music-toggle.needs-tap{color:var(--gold);border-color:var(--gold)}
+.music-toggle.needs-tap::after{content:"";position:absolute;inset:-1px;border-radius:inherit;border:1.5px solid var(--gold);opacity:0;pointer-events:none;will-change:transform,opacity;animation:mtRing 1.8s ease-out infinite}
+@keyframes mtRing{0%{transform:scale(1);opacity:.7}100%{transform:scale(1.5);opacity:0}}
+@media(max-width:1279px){.mt-label{display:none}.music-toggle{width:40px;padding:0;margin-left:14px}}
+@media(max-width:1180px){.nav-links{gap:16px}.nav-links a{font-size:.6rem;letter-spacing:.1em}.nav-links .nav-cta{padding:10px 13px}}
+@media(max-width:950px){.nav-links{gap:12px}.nav-links a{font-size:.56rem}}
+@media(max-width:700px){.music-toggle{order:1;margin-left:auto;margin-right:6px}.menu-toggle{order:2}}
+@media(prefers-reduced-motion:reduce){.music-toggle.is-on .mt-eq i,.music-toggle.needs-tap::after{animation:none!important}.music-toggle.is-on .mt-eq i{transform:scaleY(.7)}}
+
+.loader-gate{display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:6px}
+.loader-gate[hidden]{display:none}
+.loader.gated .loader-line{display:none}
+.loader-enter{display:inline-flex;align-items:center;gap:12px;padding:16px 28px;border:0;border-radius:999px;background:linear-gradient(110deg,#d9a63a,#ffe9a8,#f7c75e);color:#1a1204;font:900 .78rem var(--font);letter-spacing:.2em;cursor:pointer;box-shadow:0 10px 34px #f7c75e55;-webkit-tap-highlight-color:transparent;animation:enterPulse 1.8s ease-in-out infinite}
+.loader-enter:focus-visible{outline:2px solid #fff;outline-offset:4px}
+.le-ico{font-size:1.2rem;line-height:1}
+.loader-skip{background:none;border:0;color:#8f9bb8;font:700 .62rem var(--font);letter-spacing:.2em;text-transform:uppercase;cursor:pointer;padding:6px 10px;text-decoration:underline;text-underline-offset:4px}
+.loader-skip:hover{color:#fff}
+@keyframes enterPulse{0%,100%{box-shadow:0 10px 34px #f7c75e55}50%{box-shadow:0 12px 48px #f7c75ebb}}
+@media(prefers-reduced-motion:reduce){.loader-enter{animation:none}}
+
+.guest-grid .guest-card:last-child{grid-column:auto;max-width:none;justify-self:stretch}
+.guest-card:nth-child(6) .guest-photo img{object-position:50% 18%}

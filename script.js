@@ -51,18 +51,106 @@ const scrollLock = (() => {
   $$('img[data-fb]').forEach(img => { if (img.complete && img.naturalWidth === 0 && img.currentSrc) recover(img); });
 })();
 
+/* ---------- background music (LFCL anthem, original file, looped) ---------- */
+(function music() {
+  const audio = $('#bgMusic'), btn = $('#musicToggle');
+  const M = window.LFCLMusic = { attempt: () => Promise.resolve(true), enter: () => Promise.resolve() };
+  if (!audio || !btn) return;
+  const label = $('.mt-label', btn);
+  const VOL = 1;
+  let wantOn = true;       // visitor's intent: on until they press the button to mute
+  let blocked = false;     // browser refused to autoplay with sound
+  let fadeId = 0, resumeOnShow = false;
+
+  const setUI = mode => {  // 'on' | 'off' | 'tap'
+    btn.classList.toggle('is-on', mode === 'on');
+    btn.classList.toggle('needs-tap', mode === 'tap');
+    btn.setAttribute('aria-pressed', mode === 'on' ? 'true' : 'false');
+    btn.setAttribute('aria-label', mode === 'on' ? 'Mute music' : 'Turn music on');
+    label.textContent = mode === 'on' ? 'MUSIC ON' : mode === 'tap' ? 'TAP FOR MUSIC' : 'MUSIC OFF';
+  };
+  const fade = (to, ms, done) => {
+    cancelAnimationFrame(fadeId);
+    const from = audio.volume, t0 = performance.now();
+    const step = now => {
+      const k = Math.min(1, (now - t0) / ms);
+      try { audio.volume = from + (to - from) * k; } catch (e) { /* iOS: fixed volume */ }
+      if (k < 1) fadeId = requestAnimationFrame(step); else if (done) done();
+    };
+    fadeId = requestAnimationFrame(step);
+  };
+  // start playback; returns 'playing' | 'blocked' | 'error'
+  const play = () => {
+    audio.muted = false;
+    try { audio.volume = 0; } catch (e) { /* ignore */ }
+    let p;
+    try { p = audio.play(); } catch (e) { p = Promise.reject(e); }
+    return Promise.resolve(p).then(() => {
+      blocked = false; wantOn = true; setUI('on'); fade(VOL, 1800); return 'playing';
+    }, err => {
+      if (err && err.name === 'NotAllowedError') { blocked = true; setUI('tap'); return 'blocked'; }
+      setUI('off'); return 'error';
+    });
+  };
+
+  // used by the loader: resolves false only when the browser blocked sound
+  M.attempt = () => Promise.race([play(), new Promise(r => setTimeout(() => r('slow'), 2500))]).then(r => r !== 'blocked');
+  M.enter = withSound => {
+    if (withSound) return play();
+    wantOn = false; setUI('off'); return Promise.resolve();
+  };
+
+  // top-bar toggle
+  btn.addEventListener('click', () => {
+    if (audio.paused) { wantOn = true; play(); return; }
+    if (wantOn) {           // mute
+      wantOn = false; setUI('off');
+      fade(0, 400, () => { if (!wantOn) audio.muted = true; });
+    } else {                // unmute
+      wantOn = true; audio.muted = false; setUI('on'); fade(VOL, 900);
+    }
+  });
+
+  // safety net: if sound was blocked, the first real tap / key press starts it
+  const unlock = e => {
+    if (!blocked || !wantOn || !audio.paused) return;
+    if (e.target && e.target.closest && e.target.closest('#musicToggle,#loaderEnter,#loaderSkip')) return;
+    play().then(r => { if (r === 'playing') ['pointerdown', 'touchend', 'click', 'keydown'].forEach(t => removeEventListener(t, unlock, true)); });
+  };
+  ['pointerdown', 'touchend', 'click', 'keydown'].forEach(t => addEventListener(t, unlock, { capture: true, passive: true }));
+
+  // pause while the tab is in the background, resume when it comes back
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) { if (!audio.paused) { resumeOnShow = true; audio.pause(); } }
+    else if (resumeOnShow) { resumeOnShow = false; audio.play().catch(() => { blocked = true; setUI('tap'); }); }
+  });
+})();
+
 /* ---------- loader (never blocks on slow fonts / network) ---------- */
 (function loader() {
   const el = $('#loader');
-  let done = false;
+  let done = false, started = false;
   const hide = () => {
     if (done) return; done = true;
     if (el) { el.classList.add('done'); setTimeout(() => el.remove(), 900); } // remove => its animations stop for good
     document.body.classList.add('ready');
   };
-  if (document.readyState === 'complete') setTimeout(hide, 450);
-  else addEventListener('load', () => setTimeout(hide, 550), { once: true });
-  setTimeout(hide, 4000);
+  // browsers only allow sound after a tap: if autoplay is refused, ask for one tap on the loader
+  const gate = () => {
+    const g = $('#loaderGate'), enter = $('#loaderEnter'), skip = $('#loaderSkip');
+    if (!el || !g || !enter || !skip) return hide();
+    el.classList.add('gated'); g.hidden = false;
+    enter.addEventListener('click', () => { window.LFCLMusic.enter(true); hide(); }, { once: true });
+    skip.addEventListener('click', () => { window.LFCLMusic.enter(false); hide(); }, { once: true });
+    enter.focus({ preventScroll: true });
+  };
+  const proceed = () => {
+    if (started) return; started = true;
+    window.LFCLMusic.attempt().then(ok => ok ? hide() : gate());
+  };
+  if (document.readyState === 'complete') setTimeout(proceed, 450);
+  else addEventListener('load', () => setTimeout(proceed, 550), { once: true });
+  setTimeout(proceed, 4000);
 })();
 
 /* ---------- pause everything when the tab is hidden ---------- */

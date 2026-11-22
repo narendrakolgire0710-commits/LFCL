@@ -73,6 +73,14 @@
       </div>
       <div class="loader-name">LFCL <span>SEASON 01 · THE BIG NIGHT</span></div>
       <div class="loader-line"><i></i></div>
+      <div class="loader-gate" id="loaderGate" hidden>
+        <button class="loader-enter" id="loaderEnter" type="button">
+          <span class="le-ico" aria-hidden="true">♪</span> ENTER WITH MUSIC
+        </button>
+        <button class="loader-skip" id="loaderSkip" type="button">
+          enter without sound
+        </button>
+      </div>
     </div>
     <div class="cursor-glow" id="cursorGlow"></div>
     <div class="scroll-progress" id="scrollProgress"></div>
@@ -98,6 +106,21 @@
         ><a href="#venue">VENUE</a
         ><a class="nav-cta" href="#contact">CONTACT</a>
       </div>
+      <button
+        class="music-toggle"
+        id="musicToggle"
+        type="button"
+        aria-pressed="false"
+        aria-label="Turn music on"
+        title="Music on / off"
+      >
+        <span class="mt-eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <svg class="mt-off" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M11 5 6 9H3v6h3l5 4V5z" fill="currentColor" stroke="none"/>
+          <path d="m16 9 5 6M21 9l-5 6"/>
+        </svg>
+        <span class="mt-label">MUSIC OFF</span>
+      </button>
     </nav>
     <main>
       <section class="hero" id="home">
@@ -715,7 +738,7 @@
                 </div>
                 <span class="guest-tag">SPECIAL GUEST</span>
                 <h3>Adv Naresh Kulkarni</h3>
-                <p>Distinguished Guest</p>
+                <p>Vice President, Dayanand Law Alumni Association</p>
               </article>
               <article class="guest-card reveal">
                 <div class="guest-photo">
@@ -760,6 +783,19 @@
                 <span class="guest-tag">SPECIAL GUEST</span>
                 <h3>Adv Sanjiv Jadhav</h3>
                 <p>Vice President, Family Bar Association of Latur</p>
+              </article>
+              <article class="guest-card reveal">
+                <div class="guest-photo">
+                  <img
+                    alt="Sangmesh Bembalge"
+                    loading="lazy"
+                    decoding="async"
+                    src="assets/guest-7.webp"
+                  />
+                </div>
+                <span class="guest-tag">SPECIAL GUEST</span>
+                <h3>Sangmesh Bembalge</h3>
+                <p>Administrator, MIT World Peace School, Latur</p>
               </article>
             </div>
           </div>
@@ -1634,6 +1670,7 @@
 
     <canvas aria-hidden="true" id="confetti"></canvas>
     <div class="toast" id="toast">GOAL! ⚽</div>
+    <audio id="bgMusic" src="assets/lfcl-anthem.mp3" loop preload="none" playsinline></audio>
     <script src="script.js"></script>
   </body>
 </html>
