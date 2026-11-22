@@ -150,3 +150,5 @@
 
 .guest-grid .guest-card:last-child{grid-column:auto;max-width:none;justify-self:stretch}
 .guest-card:nth-child(6) .guest-photo img{object-position:50% 18%}
+
+.loader.gated{cursor:pointer}

@@ -114,7 +114,7 @@ const scrollLock = (() => {
   // safety net: if sound was blocked, the first real tap / key press starts it
   const unlock = e => {
     if (!blocked || !wantOn || !audio.paused) return;
-    if (e.target && e.target.closest && e.target.closest('#musicToggle,#loaderEnter,#loaderSkip')) return;
+    if (e.target && e.target.closest && e.target.closest('#musicToggle,#loader')) return;
     play().then(r => { if (r === 'playing') ['pointerdown', 'touchend', 'click', 'keydown'].forEach(t => removeEventListener(t, unlock, true)); });
   };
   ['pointerdown', 'touchend', 'click', 'keydown'].forEach(t => addEventListener(t, unlock, { capture: true, passive: true }));
@@ -137,11 +137,11 @@ const scrollLock = (() => {
   };
   // browsers only allow sound after a tap: if autoplay is refused, ask for one tap on the loader
   const gate = () => {
-    const g = $('#loaderGate'), enter = $('#loaderEnter'), skip = $('#loaderSkip');
-    if (!el || !g || !enter || !skip) return hide();
+    const g = $('#loaderGate'), enter = $('#loaderEnter');
+    if (!el || !g || !enter) return hide();
     el.classList.add('gated'); g.hidden = false;
-    enter.addEventListener('click', () => { window.LFCLMusic.enter(true); hide(); }, { once: true });
-    skip.addEventListener('click', () => { window.LFCLMusic.enter(false); hide(); }, { once: true });
+    // a tap anywhere on the opening screen enters the site with the music
+    el.addEventListener('click', () => { window.LFCLMusic.enter(true); hide(); }, { once: true });
     enter.focus({ preventScroll: true });
   };
   const proceed = () => {
